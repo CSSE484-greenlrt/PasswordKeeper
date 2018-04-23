@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Programatically initialize the first view controller.
     window = UIWindow(frame: UIScreen.main.bounds)
 
-    let showLoginScreen = true
+    let showLoginScreen = false
     if showLoginScreen {
       showLoginViewController();
     } else {

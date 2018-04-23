@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		35F203AD85E30F125A705198 /* Pods_Password_Keeper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2AE43B8961CC4D47AA2389F /* Pods_Password_Keeper.framework */; };
+		94E2AEF2208E2DA10003A63F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94E2AEF1208E2DA00003A63F /* GoogleService-Info.plist */; };
 		FD789788207E58AD009B4DFC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD789787207E58AD009B4DFC /* AppDelegate.swift */; };
 		FD78978D207E58AE009B4DFC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FD78978B207E58AD009B4DFC /* Main.storyboard */; };
 		FD789792207E58AE009B4DFC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD789791207E58AE009B4DFC /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		51ACC313D1656AE8B34BA8FC /* Pods-Password Keeper.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Password Keeper.release.xcconfig"; path = "Pods/Target Support Files/Pods-Password Keeper/Pods-Password Keeper.release.xcconfig"; sourceTree = "<group>"; };
+		94E2AEF1208E2DA00003A63F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B5C3F6506BCBAF8D2AEA61F6 /* Pods-Password Keeper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Password Keeper.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Password Keeper/Pods-Password Keeper.debug.xcconfig"; sourceTree = "<group>"; };
 		E2AE43B8961CC4D47AA2389F /* Pods_Password_Keeper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Password_Keeper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD789784207E58AD009B4DFC /* Password Keeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Password Keeper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +88,7 @@
 		FD789786207E58AD009B4DFC /* Password Keeper */ = {
 			isa = PBXGroup;
 			children = (
+				94E2AEF1208E2DA00003A63F /* GoogleService-Info.plist */,
 				FD789787207E58AD009B4DFC /* AppDelegate.swift */,
 				FD78978B207E58AD009B4DFC /* Main.storyboard */,
 				FD789791207E58AE009B4DFC /* Assets.xcassets */,
@@ -161,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD789795207E58AE009B4DFC /* LaunchScreen.storyboard in Resources */,
+				94E2AEF2208E2DA10003A63F /* GoogleService-Info.plist in Resources */,
 				FD789792207E58AE009B4DFC /* Assets.xcassets in Resources */,
 				FD78978D207E58AE009B4DFC /* Main.storyboard in Resources */,
 			);
@@ -373,7 +377,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.rose-hulman.fisherds.Password-Keeper";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.rose-hulman.greenlrt.Password-Keeper";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -392,7 +396,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.rose-hulman.fisherds.Password-Keeper";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.rose-hulman.greenlrt.Password-Keeper";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
