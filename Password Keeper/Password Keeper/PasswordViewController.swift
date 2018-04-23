@@ -17,6 +17,9 @@ class PasswordViewController: UIViewController, UITableViewDataSource, UITableVi
   let kOpenCellHeight: CGFloat = 240
   var cellHeights = [CGFloat]()
   var passwords = [Password]()
+    
+    var currentUserCollectionRef: CollectionReference!
+    var passwordListener: ListenerRegistration!
 
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -42,11 +45,80 @@ class PasswordViewController: UIViewController, UITableViewDataSource, UITableVi
                     print("You are now signed in using Anonymous auth. uid: \(user!.uid)")
                 } else {
                     print("Error with anonymous auth: \(error!.localizedDescription)")
+                    self.setupFirebaseObservers()
                 }
             }
             
         } else {
             print("You are already signed in as: \(Auth.auth().currentUser!.uid)")
+            self.setupFirebaseObservers()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        passwordListener.remove()
+    }
+    
+    func setupFirebaseObservers() {
+        guard let currentUser = Auth.auth().currentUser else { return }
+        currentUserCollectionRef = Firestore.firestore().collection(currentUser.uid)
+        
+        // Temp test
+//        print("Send a fake piece of data to learn about auth")
+//        currentUserCollectionRef.addDocument(data: ["services": "Hardcoded service",
+//                                                    "username": "fisherds",
+//                                                    "password": "12345"])
+        self.passwords.removeAll()
+        passwordListener = currentUserCollectionRef.order(by: "service").addSnapshotListener({ (passwordSnapshot, error) in
+            guard let snapshot = passwordSnapshot else {
+                print("Error fetching passwords. \(error!.localizedDescription)")
+                return
+            }
+            snapshot.documentChanges.forEach {(docChange) in
+                if (docChange.type == .added) {
+                    print("New password: \(docChange.document.data())")
+                    self.passwordAdded(docChange.document)
+                } else if (docChange.type == .modified) {
+                    print("Modified password: \(docChange.document.data())")
+                    self.passwordUpdated(docChange.document)
+                } else if (docChange.type == .removed) {
+                    print("Removed password: \(docChange.document.data())")
+                    self.passwordRemoved(docChange.document)
+                }
+            }
+            self.passwords.sort(by: { (p1, p2) -> Bool in
+                return p1.service < p2.service
+            })
+            self.tableView.reloadData()
+        })
+    }
+    
+    func passwordAdded(_ document: DocumentSnapshot) {
+        let newPassword = Password(documentSnapshot: document)
+        passwords.append(newPassword)
+        cellHeights.append(kCloseCellHeight)
+    }
+    
+    func passwordUpdated(_ document: DocumentSnapshot) {
+        let modifiedPassword = Password(documentSnapshot: document)
+        for password in passwords {
+            if (password.id == modifiedPassword.id) {
+                password.service = modifiedPassword.service
+                password.username = modifiedPassword.username
+                password.password = modifiedPassword.password
+                break
+            }
+        }
+    }
+    
+    func passwordRemoved(_ document: DocumentSnapshot) {
+        for i in 0 ..< passwords.count {
+            if passwords[i].id == document.documentID {
+                passwords.remove(at: i)
+                cellHeights.remove(at: i)
+                break
+            }
         }
     }
 
@@ -83,10 +155,14 @@ class PasswordViewController: UIViewController, UITableViewDataSource, UITableVi
       let passwordTextField = alertController.textFields![2]
 
       // Locally edit a Password and reload the table.
-      pw.service = serviceTextField.text!
-      pw.username = usernameTextField.text!
-      pw.password = passwordTextField.text!
-      self.tableView.reloadData()
+//      pw.service = serviceTextField.text!
+//      pw.username = usernameTextField.text!
+//      pw.password = passwordTextField.text!
+//      self.tableView.reloadData()
+        let editedPassword = Password(service: serviceTextField.text!,
+                                      username: usernameTextField.text!,
+                                      password: passwordTextField.text!)
+        self.currentUserCollectionRef.document(pw.id!).updateData(editedPassword.data)
     }
     alertController.addAction(cancelAction)
     alertController.addAction(defaultAction)
@@ -99,10 +175,11 @@ class PasswordViewController: UIViewController, UITableViewDataSource, UITableVi
     let deleteAction = UIAlertAction(title: "Delete", style: UIAlertActionStyle.destructive) { (action) -> Void in
 
       // Locally delete a Password and reload the table.
-      let indexPw: Int! = self.passwords.index(of: pw)
-      self.passwords.remove(at: indexPw)
-      self.cellHeights.remove(at: indexPw)
-      self.tableView.reloadData()
+//      let indexPw: Int! = self.passwords.index(of: pw)
+//      self.passwords.remove(at: indexPw)
+//      self.cellHeights.remove(at: indexPw)
+//      self.tableView.reloadData()
+        self.currentUserCollectionRef.document(pw.id!).delete()
     }
     alertController.addAction(cancelAction)
     alertController.addAction(deleteAction)
@@ -132,9 +209,10 @@ class PasswordViewController: UIViewController, UITableViewDataSource, UITableVi
       let newPassword = Password(service: serviceTextField.text!,
                                  username: usernameTextField.text!,
                                  password: passwordTextField.text!)
-      self.passwords.insert(newPassword, at: 0)
-      self.cellHeights.insert(self.kCloseCellHeight, at: 0)
-      self.tableView.reloadData()
+//      self.passwords.insert(newPassword, at: 0)
+//      self.cellHeights.insert(self.kCloseCellHeight, at: 0)
+//      self.tableView.reloadData()
+        self.currentUserCollectionRef.addDocument(data: newPassword.data)
     }
     alertController.addAction(cancelAction)
     alertController.addAction(defaultAction)
