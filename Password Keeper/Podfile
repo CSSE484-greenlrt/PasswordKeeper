@@ -8,5 +8,9 @@ target 'Password Keeper' do
   # Pods for Password Keeper
   pod 'Material', '~> 2.14.0'
   pod 'FoldingCell', '~> 3.0.6'
+  
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
 
 end
