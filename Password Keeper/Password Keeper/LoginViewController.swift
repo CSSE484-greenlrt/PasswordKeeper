@@ -8,9 +8,12 @@
 
 import UIKit
 import Material
-
+import Firebase
+import Rosefire
 
 class LoginViewController: UIViewController {
+    
+    let rosefireRegistryToken = "11afee18-0365-4fe7-8e74-e1dea678773b"
 
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var emailPasswordCard: Card!
@@ -87,19 +90,45 @@ class LoginViewController: UIViewController {
   }
 
   // MARK: - Login Methods
+    func loginCompletionCallback(_ user: User?, _ error: Error?) {
+        if let error = error {
+            print("Error during log in: \(error.localizedDescription)")
+            let ac = UIAlertController(title: "Login failed",
+                                       message: error.localizedDescription,
+                                       preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(ac, animated: true)
+        } else {
+            appDelegate.handleLogin()
+        }
+    }
 
   @objc func handleEmailPasswordSignUp() {
-    print("TODO: Implement Email / Password Sign up")
+    Auth.auth().createUser(withEmail: emailTextField.text!,
+                           password: passwordTextField.text!,
+                           completion: loginCompletionCallback)
   }
 
 
   @objc func handleEmailPasswordLogin() {
-    print("TODO: Implement Email / Password Login")
+    Auth.auth().signIn(withEmail: emailTextField.text!,
+                       password: passwordTextField.text!,
+                       completion: loginCompletionCallback)
   }
 
 
   @IBAction func rosefireLogin(_ sender: Any) {
-    print("TODO: Implement Rosefire login")
+    Rosefire.sharedDelegate().uiDelegate = self
+    Rosefire.sharedDelegate().signIn(registryToken: rosefireRegistryToken) {
+        (error, result) in
+        if let error = error {
+            print("Error communicating with Rosefire! \(error.localizedDescription)")
+            return
+        }
+        print("You are now signed in with Rosefire!  username: \(result!.username!)")
+        Auth.auth().signIn(withCustomToken: result!.token,
+                           completion: self.loginCompletionCallback)
+    }
   }
 
 }

@@ -22,8 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
     FirebaseApp.configure()
 
-    let showLoginScreen = false
-    if showLoginScreen {
+    if Auth.auth().currentUser == nil {
       showLoginViewController();
     } else {
       showPasswordViewController();
@@ -33,11 +32,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   func handleLogin() {
-    print("TODO: Implement sign in from the AppDelegate")
+//    print("TODO: Implement sign in from the AppDelegate")
+    showPasswordViewController()
   }
 
   @objc func handleLogout() {
-    print("TODO: Implement sign out from the AppDelegate")
+//    try! Auth.auth().signOut()
+    do {
+        try Auth.auth().signOut()
+    } catch {
+        print("Error on sign out: \(error.localizedDescription)")
+    }
+    showLoginViewController()
   }
 
   func showLoginViewController() {
